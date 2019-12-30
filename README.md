@@ -2,4 +2,6 @@
 
 A small personal project I've been working on.
 
-WIP: Editing, removing, and viewing recipes.
+This application creates recipe cards from user input.
+
+WIP: Editing, removing, viewing, and saving recipes.
