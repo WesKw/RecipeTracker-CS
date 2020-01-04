@@ -105,7 +105,6 @@ namespace RecipeTracker3
         /// <param name="ingreds">Ingredients needed</param>
         public static void AddRecipe(String newName, String newTime, String steps, String ingreds)
         {
-            //Test, Fix later
             Recipe food = new Recipe(newName, newTime, steps, ingreds); //Creates a new recipe object with name, time, num of steps and num of ingreds.
             recipeList.AddLast(food); //Adds recipe to end of the class's linked list.
             MessageBox.Show(food.ToString()); //Quick display
@@ -159,7 +158,8 @@ namespace RecipeTracker3
             } else
             {
                 //Display all available recipes
-                //Test
+                ViewRecipeForm FormView = new ViewRecipeForm();
+                FormView.ShowDialog();
             }
         }
 
