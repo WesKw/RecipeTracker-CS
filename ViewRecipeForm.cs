@@ -13,7 +13,7 @@ namespace RecipeTracker3
     public partial class ViewRecipeForm : Form
     {
 
-        public static int yLoc = 50;
+        public static int yLoc;
 
         public ViewRecipeForm()
         {
@@ -21,11 +21,14 @@ namespace RecipeTracker3
 
             //Get Enumerator for recipeList
             LinkedList<Recipe>.Enumerator em = Form1.recipeList.GetEnumerator();
-            MessageBox.Show("Enumerator made");
+            //MessageBox.Show("Enumerator made");
+
+            //Set yLoc to 50
+            yLoc = 50;
 
             while(em.MoveNext())
             {
-                MessageBox.Show("Inside of while loop");
+                //MessageBox.Show("Inside of while loop");
                 Button recButton = new Button(); //Create new button
                 recButton.Text = em.Current.GetName(); //Button text gets name of current recipe
                 recButton.Location = new Point(50, yLoc); //Place buttons beneath each other
@@ -37,16 +40,18 @@ namespace RecipeTracker3
             }
         }
 
-        //TODO
         /// <summary>
-        /// This click handler displays the recipe clicked by the user
+        /// This click handler displays the recipe clicked by the user. 
         /// Uses the name of the button to find the recipe requested.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void Recipe_Click(Object sender, EventArgs e)
+        public void Recipe_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("true");
+            Button display = sender as Button;
+            string recipeName = display.Text;
+
+            MessageBox.Show(Form1.FindRecipe(recipeName).ToString());
         }
     }
 }
