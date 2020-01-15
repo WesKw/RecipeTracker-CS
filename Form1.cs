@@ -164,8 +164,28 @@ namespace RecipeTracker3
         }
 
         /// <summary>
+        /// Locates the recipe with the same name as the parameter.
+        /// </summary>
+        /// <param name="name">Name of the recipe wanted.</param>
+        /// <returns>The recipe with the name of the parameter.</returns>
+        public static Recipe FindRecipe(string name)
+        {
+            //Run through the enumerator and find the recipe with the same name
+            LinkedList<Recipe>.Enumerator em = recipeList.GetEnumerator();
+            while(em.MoveNext())
+            {
+                if (name.Equals(em.Current.GetName()))
+                {
+                    return em.Current;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Event handler for the "exit" button.
-        /// Exits the program.
+        /// Exits program
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
