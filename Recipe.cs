@@ -13,11 +13,13 @@ namespace RecipeTracker3
         //Create recipe components
         private String name;
         private String time;
+        private String steps;
+        private String ingredients;
 
-        //Arrays public for now
-        public String steps;
-        public String ingredients;
+        //Category (TO DO)
+        public string category;
 
+        //Default constructor
         public Recipe()
         {
             this.name = "Placeholder";
@@ -26,6 +28,7 @@ namespace RecipeTracker3
             this.ingredients = "";
         }
 
+        //Overloaded constructor without category
         public Recipe(String newName, String newTime, String steps, String ingredients)
         {
             this.name = newName;
@@ -34,57 +37,39 @@ namespace RecipeTracker3
             this.ingredients = ingredients;
         }
 
-        //Getter methods
-        public String GetName()
-        {
-            return this.name;
-        }
-
-        public String GetTime()
-        {
-            return this.time;
-        }
-
-        public String GetSteps()
-        {
-            return this.steps;
-        }
-
-        public String GetIngred()
-        {
-            return this.ingredients;
-        }
-        //End getter methods
-
-        //Mutator Methods
-        public void SetName(String newName)
+        //Overloaded constructor that takes args for each member in recipe
+        public Recipe(String newName, String newTime, String steps, String ingredients, string category)
         {
             this.name = newName;
-        }
-
-        public void SetTime(String newTime)
-        {
             this.time = newTime;
+            this.steps = steps;
+            this.ingredients = ingredients;
+            this.category = category;
         }
 
-        public void SetSteps(String newSteps)
+        public string Name
         {
-            this.steps = newSteps;
+            get { return name; }
+            set { name = value; }
         }
 
-        public void SetIngreds(String newIngreds)
+        public string Time
         {
-            this.ingredients = newIngreds;
+            get { return time; }
+            set { time = value; }
         }
 
-        /*
-        public void AddRecipe(String newName, String newTime, String steps, String ingreds)
+        public string Steps
         {
-            Recipe food = new Recipe(newName, newTime, steps, ingreds); //Creates a new recipe object with name, time, num of steps and num of ingreds.
-            //recipeList.AddLast(recipe); //Adds recipe to end of the class's linked list.
-
+            get { return steps; }
+            set { steps = value; }
         }
-        */
+
+        public string Ingredients
+        {
+            get { return ingredients; }
+            set { ingredients = value; }
+        }
 
         //ToString
         public override String ToString()
@@ -100,7 +85,8 @@ namespace RecipeTracker3
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Form MainForm = new Form1();
+            Application.Run(MainForm);
         }
     }
 }

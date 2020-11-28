@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace RecipeTracker3
@@ -28,12 +29,17 @@ namespace RecipeTracker3
 
         //Create recipe LinkedList
         public static LinkedList<Recipe> recipeList = new LinkedList<Recipe>();
+        private string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
         public Form1()
         {
             InitializeComponent();
             this.Name = "Recipe Tracker 3";
             this.Text = "Recipe Tracker";
+
+            TextBox title = new TextBox();
+            title.Text = "Recipe Tracker";
+            title.Location = new Point(10, 10);
 
             //Initialize each button
             add = new Button();
@@ -82,6 +88,20 @@ namespace RecipeTracker3
             this.Controls.Add(exit);
             //Create exit click handler
             exit.Click += new EventHandler(Exit_Click);
+
+            path += "\\recipe_tracker" + "\\recipes";
+            Console.WriteLine(path);
+            //If an already existing recipe list exists
+            if(File.Exists(path))
+            {
+                Console.WriteLine("Cool");
+                //Load it
+                LoadRecipes(path);
+            } else
+            {
+                //Create the directory
+                Directory.CreateDirectory(path);
+            }
         }
 
         /// <summary>
@@ -103,11 +123,16 @@ namespace RecipeTracker3
         /// <param name="newTime">Total time to cook</param>
         /// <param name="steps">Each step</param>
         /// <param name="ingreds">Ingredients needed</param>
-        public static void AddRecipe(String newName, String newTime, String steps, String ingreds)
+        public static void AddRecipe(String newName, String newTime, String steps, String ingreds, string category)
         {
-            Recipe food = new Recipe(newName, newTime, steps, ingreds); //Creates a new recipe object with name, time, num of steps and num of ingreds.
+            Recipe food = new Recipe(newName, newTime, steps, ingreds, category); //Creates a new recipe object with name, time, num of steps and num of ingreds.
             recipeList.AddLast(food); //Adds recipe to end of the class's linked list.
             MessageBox.Show(food.ToString()); //Quick display
+        }
+
+        public static void DisplayError()
+        {
+            MessageBox.Show("You have no recipes! \nClick \"add\" to create a new recipe.", "ERROR");
         }
 
         /// <summary>
@@ -118,12 +143,14 @@ namespace RecipeTracker3
         /// <param name="e"></param>
         public void Remove_Click(object sender, EventArgs e)
         {
-            if (recipeList.Count == 0)
+            if (recipeList.Count == 0 || recipeList is null)
             {
-                MessageBox.Show("You have no recipes to remove! \nClick \"add\" to create a new recipe.");
+                DisplayError();
             } else
             {
-                //Display all recipes
+                MessageBox.Show("Choose a recipe to delete.");
+                ViewRecipeForm FormView = new ViewRecipeForm(0);
+                FormView.ShowDialog();
             }
         }
 
@@ -137,10 +164,13 @@ namespace RecipeTracker3
         {
             if(recipeList.Count == 0)
             {
-                MessageBox.Show("You have no recipes to edit! \nClick \"add\" to create a new recipe.");
+                DisplayError();
             } else
             {
                 //Display all recipes
+                MessageBox.Show("Choose a recipe to edit.");
+                ViewRecipeForm FormView = new ViewRecipeForm(1);
+                FormView.ShowDialog();
             }
         }
 
@@ -154,11 +184,12 @@ namespace RecipeTracker3
         {
             if (recipeList.Count == 0)
             {
-                MessageBox.Show("You have no recipes to view! \nClick \"add\" to create a new recipe.");
+                DisplayError();
             } else
             {
+                MessageBox.Show("Choose a recipe to view.");
                 //Display all available recipes
-                ViewRecipeForm FormView = new ViewRecipeForm();
+                ViewRecipeForm FormView = new ViewRecipeForm(2);
                 FormView.ShowDialog();
             }
         }
@@ -174,13 +205,49 @@ namespace RecipeTracker3
             LinkedList<Recipe>.Enumerator em = recipeList.GetEnumerator();
             while(em.MoveNext())
             {
-                if (name.Equals(em.Current.GetName()))
+                if (name.Equals(em.Current.Name))
                 {
                     return em.Current;
                 }
             }
 
             return null;
+        }
+
+        public LinkedList<Recipe> LoadRecipes(string path)
+        {
+            using (StreamReader sr = new StreamReader(path))
+            {
+                while (!sr.EndOfStream)
+                {
+                    string name = sr.ReadLine();
+                    string time = sr.ReadLine();
+                    string steps = sr.ReadLine();
+                    string ingredients = sr.ReadLine();
+                    Recipe new_rp = new Recipe(name, time, steps, ingredients);
+                    recipeList.AddLast(new_rp);
+                }
+            }
+                return null;
+        }
+
+        public void SaveRecipes(string path)
+        {
+            if (File.Exists(path))
+            {
+                IEnumerator<Recipe> ienum = recipeList.GetEnumerator();
+                //Save the recipe list
+                using (StreamWriter sw = new StreamWriter(path))
+                {
+                    foreach(Recipe x in recipeList)
+                    {
+                        sw.WriteLine(x.Name);
+                        sw.WriteLine(x.Time);
+                        sw.WriteLine(x.Steps);
+                        sw.WriteLine(x.Ingredients);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -191,7 +258,9 @@ namespace RecipeTracker3
         /// <param name="e"></param>
         public void Exit_Click(object sender, EventArgs e)
         {
+            SaveRecipes(path);
             System.Windows.Forms.Application.Exit();
         }
+
     }
 }

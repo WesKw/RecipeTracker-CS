@@ -15,7 +15,12 @@ namespace RecipeTracker3
 
         public static int yLoc;
 
-        public ViewRecipeForm()
+        /// <summary>
+        /// Constructor for the ViewRecipeForm
+        /// </summary>
+        /// <param name="Action">The current action determined by user. 0 is 
+        /// remove, 1 is edit, 2 is view.</param>
+        public ViewRecipeForm(int Action)
         {
             InitializeComponent();
 
@@ -30,14 +35,54 @@ namespace RecipeTracker3
             {
                 //MessageBox.Show("Inside of while loop");
                 Button recButton = new Button(); //Create new button
-                recButton.Text = em.Current.GetName(); //Button text gets name of current recipe
+                recButton.Text = em.Current.Name; //Button text gets name of current recipe
                 recButton.Location = new Point(50, yLoc); //Place buttons beneath each other
-                recButton.Click += new EventHandler(Recipe_Click); //Click handler
+
+                if (Action == 0)
+                    recButton.Click += new EventHandler(Remove_Click); //Remove handler
+
+                if (Action == 1)
+                    recButton.Click += new EventHandler(Edit_Click); //Edit handler
+
+                if(Action == 2)
+                    recButton.Click += new EventHandler(View_Click); //View handler
+
                 this.Controls.Add(recButton);
 
                 yLoc += 100; //y location increased by 250
 
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void Remove_Click(object sender, EventArgs e)
+        {
+            Button remove = sender as Button;
+            string recipeName = remove.Text;
+            Recipe wantToRemove = Form1.FindRecipe(recipeName);
+            Form1.recipeList.Remove(wantToRemove);
+            remove.BackColor = Color.Red;
+        }
+
+        public void Edit_Click(object sender, EventArgs e)
+        {
+            Button edit = sender as Button;
+            string recipeName = edit.Text;
+            Recipe wantToEdit = Form1.FindRecipe(recipeName);
+
+            AddRecipeForm EditForm = new AddRecipeForm();
+            EditForm.ShowDialog();
+
+            EditForm.nameBox.Text = wantToEdit.Name;
+            EditForm.timeBox.Text = wantToEdit.Time;
+            EditForm.stepsBox.Text = wantToEdit.Steps;
+            EditForm.ingredBox.Text = wantToEdit.Ingredients;
+            EditForm.categBox.Text = wantToEdit.category;
+
         }
 
         /// <summary>
@@ -46,7 +91,7 @@ namespace RecipeTracker3
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void Recipe_Click(object sender, EventArgs e)
+        public void View_Click(object sender, EventArgs e)
         {
             Button display = sender as Button;
             string recipeName = display.Text;

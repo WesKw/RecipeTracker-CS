@@ -23,7 +23,9 @@ namespace RecipeTracker3
         //Ingredients
         public RichTextBox ingredBox;
         public Label ingredLabel;
-
+        //Category
+        public TextBox categBox;
+        public Label categLabel;
         public AddRecipeForm()
         {
             InitializeComponent();
@@ -40,6 +42,8 @@ namespace RecipeTracker3
             this.stepsLabel = new System.Windows.Forms.Label();
             this.ingredBox = new System.Windows.Forms.RichTextBox();
             this.ingredLabel = new System.Windows.Forms.Label();
+            this.categBox = new System.Windows.Forms.TextBox();
+            this.categLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // create
@@ -49,7 +53,7 @@ namespace RecipeTracker3
             this.create.Size = new System.Drawing.Size(177, 30);
             this.create.TabIndex = 0;
             this.create.Text = "Create";
-            create.Click += new System.EventHandler(Create_Click);
+            this.create.Click += new System.EventHandler(this.Create_Click);
             // 
             // nameBox
             // 
@@ -71,7 +75,7 @@ namespace RecipeTracker3
             this.timeBox.Location = new System.Drawing.Point(571, 24);
             this.timeBox.Name = "timeBox";
             this.timeBox.Size = new System.Drawing.Size(177, 22);
-            this.timeBox.TabIndex = 0;
+            this.timeBox.TabIndex = 1;
             // 
             // timeLabel
             // 
@@ -86,7 +90,7 @@ namespace RecipeTracker3
             this.stepsBox.Location = new System.Drawing.Point(91, 113);
             this.stepsBox.Name = "stepsBox";
             this.stepsBox.Size = new System.Drawing.Size(350, 368);
-            this.stepsBox.TabIndex = 0;
+            this.stepsBox.TabIndex = 3;
             this.stepsBox.Text = "";
             // 
             // stepsLabel
@@ -102,7 +106,7 @@ namespace RecipeTracker3
             this.ingredBox.Location = new System.Drawing.Point(571, 110);
             this.ingredBox.Name = "ingredBox";
             this.ingredBox.Size = new System.Drawing.Size(177, 371);
-            this.ingredBox.TabIndex = 0;
+            this.ingredBox.TabIndex = 4;
             this.ingredBox.Text = "";
             // 
             // ingredLabel
@@ -112,6 +116,21 @@ namespace RecipeTracker3
             this.ingredLabel.Size = new System.Drawing.Size(100, 30);
             this.ingredLabel.TabIndex = 0;
             this.ingredLabel.Text = "Ingredients:";
+            // 
+            // categBox
+            // 
+            this.categBox.Location = new System.Drawing.Point(91, 60);
+            this.categBox.Name = "categBox";
+            this.categBox.Size = new System.Drawing.Size(350, 22);
+            this.categBox.TabIndex = 2;
+            // 
+            // categLabel
+            // 
+            this.categLabel.Location = new System.Drawing.Point(12, 60);
+            this.categLabel.Name = "categLabel";
+            this.categLabel.Size = new System.Drawing.Size(100, 30);
+            this.categLabel.TabIndex = 0;
+            this.categLabel.Text = "Category:";
             // 
             // AddRecipeForm
             // 
@@ -125,6 +144,9 @@ namespace RecipeTracker3
             this.Controls.Add(this.stepsLabel);
             this.Controls.Add(this.ingredBox);
             this.Controls.Add(this.ingredLabel);
+            this.Controls.Add(this.categBox);
+            this.Controls.Add(this.categLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AddRecipeForm";
@@ -135,6 +157,12 @@ namespace RecipeTracker3
 
         }
 
+        public AddRecipeForm(int Action)
+        {
+            InitializeComponent();
+
+        }
+
         private void AddRecipeForm_Load(object sender, System.EventArgs e)
         {
             MessageBox.Show("Please enter information into the boxes.");
@@ -142,19 +170,23 @@ namespace RecipeTracker3
 
         public void Create_Click(object sender, System.EventArgs e)
         {
-            if (nameBox.Text == "" || timeBox.Text == "" || stepsBox.Text == "" || ingredBox.Text == "")
+            //Check if any values in are missing
+            if (nameBox.Text == "" || timeBox.Text == "" || stepsBox.Text == "" || ingredBox.Text == "" || categBox.Text == "")
             {
                 MessageBox.Show("Error: Missing information!");
             }
             else
             {
-                string[] recipeInfo = new string[4];
+                string[] recipeInfo = new string[5];
                 recipeInfo[0] = nameBox.Text;
                 recipeInfo[1] = timeBox.Text;
                 recipeInfo[2] = stepsBox.Text;
                 recipeInfo[3] = ingredBox.Text;
+                recipeInfo[4] = categBox.Text;
 
-                Form1.AddRecipe(recipeInfo[0], recipeInfo[1], recipeInfo[2], recipeInfo[3]);
+                Form1.AddRecipe(recipeInfo[0], recipeInfo[1], recipeInfo[2], recipeInfo[3], recipeInfo[4]);
+
+                this.Close();
             }
         }
     }
